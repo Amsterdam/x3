@@ -1,0 +1,33 @@
+#vis {
+	width: 700px;
+	height: 300px;
+	border: 1px solid red;
+	font-family: Corbel;
+}
+
+.dark {
+	fill: black;
+}
+
+.light {
+	fill: white;
+}
+
+.grid line, .grid path {
+	fill: none;
+	stroke: #dddddd;
+}
+
+.axis line, .axis path {
+	stroke: #DDD;
+	fill: none;
+	shape-rendering: crispEdges;
+}
+
+.axis text {
+	fill: #000;
+}
+
+.axis line {
+
+}

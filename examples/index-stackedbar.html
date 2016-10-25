@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="index.css" />
+<script src="../js/d3.min.js"></script>
+<script src="../js/function.js"></script>
+<script src="../js/function/extensions.js"></script>
+<script src="../js/x3.js"></script>
+<script src="../js/x3/axis.js"></script>
+<script src="../js/x3/bar.js"></script>
+<script type="text/javascript">
+var vis = new x3();
+var xAxis = new x3.axis();
+var yAxis = new x3.axis();
+
+window.onload=function() {
+	var bar = new x3.bar();
+
+	xAxis.set("orientation", 'bottom');
+	xAxis.set("type", 'ordinal');
+	yAxis.set("orientation", 'left');
+	yAxis.set("type", 'linear');
+
+	vis.on('create', function() {
+		xAxis.set("parent", this);
+		yAxis.set("parent", this);
+		bar.set("parent", this);
+		yAxis.create();
+		xAxis.create();
+		bar.create();
+	});
+	
+	vis.on("draw", function() {
+		yAxis.draw();
+		xAxis.draw();
+		yAxis.draw();
+		xAxis.draw();
+	}, 0);
+
+	vis.on("draw", function() {
+		bar.redraw();
+	}, 1);
+
+	vis.on("redraw", function() {
+		yAxis.redraw();
+		xAxis.redraw();
+		yAxis.redraw();
+		xAxis.redraw();
+	}, 0);
+
+	vis.on("redraw", function() {
+		bar.redraw();
+	}, 1);
+
+	xAxis.set("scale", ['A','B','C','D','E']);
+	yAxis.set("scale", [0, 100]);
+
+	xAxis.set("leftMargin", function() {
+		return yAxis.get("bbox").width;
+	});
+
+	xAxis.set("rightMargin", 0);
+
+	xAxis.set("link", function() {
+		return yAxis.get("position", 0);
+	});
+
+	yAxis.set("link", function() {
+		return yAxis.get("bbox").width;
+	});
+
+	yAxis.set("bottomMargin", function() {
+		return xAxis.get("bbox").height;
+	});
+
+	yAxis.set("topMargin", 0);
+
+	vis.set("margin", 0, 0, 0, 0);
+	vis.appendTo('#vis');
+
+	bar.set("end", function(d) {
+		var a = 0;
+		if(typeof(xAxis.get("link")) == 'number') {
+			a = xAxis.get("link");
+		}
+		var b = yAxis.get("position", d['y'][1]-d['y'][0]);
+
+		return a-b;
+	});
+
+	bar.set("width", function(d, i) {
+		return xAxis.get("tickWidth")-10;
+	});
+
+	bar.set("left", function(d, i) {
+		return xAxis.get("position", d['x'])+xAxis.get("bbox").left+5;
+	});
+	
+	bar.set("start", function(d, i, f) {
+		var start = yAxis.get("position", d['y'][0]);
+		if(f == true) {
+			var height = this.get('end', d, i, f);
+			start -= (height/2);
+		}
+		return start;
+	});
+
+	bar.set("data", [
+		{'x': 'A', 'y': [ 0, 49 ], 'color': '#FF0000'},
+		{'x': 'A', 'y': [ 49, 100 ], 'color': '#71BDEE'},
+		{'x': 'B', 'y': [ 0, 51 ], 'color': '#FF0000'},
+		{'x': 'B', 'y': [ 51, 100 ], 'color': '#71BDEE'},
+		{'x': 'D', 'y': [ 0, 64 ], 'color': '#888888'},
+		{'x': 'D', 'y': [ 64, 100 ], 'color': '#CCCCCC'},
+		{'x': 'E', 'y': [ 0, 33 ], 'color': '#888888'},
+		{'x': 'E', 'y': [ 33, 66 ], 'color': '#CCCCCC'},
+		{'x': 'E', 'y': [ 66, 100 ], 'color': '#DDDDDD'},
+	]);
+
+	window.setTimeout(function() {
+		bar.set("data", [
+			{'x': 'A', 'y': [ 0, 75 ], 'color': '#888888'},
+			{'x': 'A', 'y': [ 75, 100 ], 'color': '#CCCCCC'},
+			{'x': 'B', 'y': [ 0, 25 ], 'color': '#888888'},
+			{'x': 'B', 'y': [ 25, 100 ], 'color': '#CCCCCC'},
+			{'x': 'D', 'y': [ 0, 64 ], 'color': '#FF0000'},
+			{'x': 'D', 'y': [ 64, 100 ], 'color': '#71BDEE'},
+			{'x': 'E', 'y': [ 0, 20 ], 'color': '#FF0000'},
+			{'x': 'E', 'y': [ 20, 40 ], 'color': '#71BDEE'},
+			{'x': 'E', 'y': [ 40, 100 ], 'color': '#B1D9F5'}
+		]);
+
+		vis.redraw();
+	}, 1000);
+	vis.draw();
+}
+</script>
+</head>
+<body>
+<div id='vis'></div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="index.css" />
+<script src="../js/d3.min.js"></script>
+<script src="../js/function.js"></script>
+<script src="../js/function/extensions.js"></script>
+<script src="../js/x3.js"></script>
+<script src="../js/x3/axis.js"></script>
+<script src="../js/x3/bar.js"></script>
+<script type="text/javascript">
+var vis = new x3();
+var xAxis = new x3.axis();
+var yAxis = new x3.axis();
+
+function addText() {
+	vis.get("svg").selectAll('.line')
+		.data([null])
+			.enter()
+				.append("line")
+					.attr("class", "line")
+					.attr("stroke-width", 1)
+					.attr("stroke", '#FF0000')
+					.style("opacity", 0)
+					.attr("x1", yAxis.get("bbox").left)
+					.attr("x2", yAxis.get("bbox").left+xAxis.get("bbox").width)
+					.attr("y1", yAxis.get("position", 0))
+					.attr("y2", yAxis.get("position", 0))
+						.transition().duration(vis.get("transitionSpeed"))
+							.style("opacity", 1)
+							.attr("y1", yAxis.get("position", 21))
+							.attr("y2", yAxis.get("position", 21))
+							
+	vis.get("svg").selectAll('.text1')
+		.data([null])
+			.enter()
+				.append("text")
+					.attr("class", "text1")
+					.text("gemiddeld 21%")
+					.attr("fill", '#FF0000')
+					.attr("font-style", 'italic')
+					.style("opacity", 0)
+					.attr("y", yAxis.get("position", 0))
+					.transition().duration(vis.get("transitionSpeed"))
+						.style("opacity", 1)
+						.attr("x", function(d, i) {
+							return (yAxis.get("bbox").left+((yAxis.get("bbox").left+xAxis.get("bbox").width)/2)-(this.getBBox().width/2));
+						})
+						.attr("y", function(d, i) {
+							return yAxis.get("position", 21)-5;
+						})
+						
+	vis.get("svg").selectAll('.text2')
+		.data([null])
+			.enter()
+				.append("text")
+					.attr("class", "text2")
+					.text("% van de Amsterdammers")
+					.attr("y", yAxis.get("position", 35)-10)
+					.attr("x", xAxis.get("bbox").left-yAxis.get("bbox").width)
+}
+
+window.onload=function() {
+	var bar = new x3.bar();
+
+	xAxis.set("orientation", 'bottom');
+	xAxis.set("type", 'ordinal');
+	yAxis.set("orientation", 'left');
+	yAxis.set("type", 'linear');
+
+	vis.on('create', function() {
+		xAxis.set("parent", this);
+		yAxis.set("parent", this);
+		bar.set("parent", this);
+		yAxis.create();
+		xAxis.create();
+		bar.create();
+	});
+	
+	vis.on("draw", function() {
+		yAxis.draw();
+		xAxis.draw();
+		yAxis.draw();
+		xAxis.draw();
+	}, 0);
+
+	vis.on("draw", function() {
+		bar.redraw();
+	}, 1);
+
+	vis.on("redraw", function() {
+		yAxis.redraw();
+		xAxis.redraw();
+		yAxis.redraw();
+		xAxis.redraw();
+	}, 0);
+
+	vis.on("redraw", function() {
+		bar.redraw();
+	}, 1);
+
+	vis.on("draw", function() {
+		addText();
+	}, 2);
+
+	xAxis.set("scale", ['0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65+']);
+	yAxis.set("scale", [0, 35]);
+	
+	xAxis.set("leftMargin", function() {
+		return yAxis.get("bbox").width;
+	});
+
+	xAxis.set("rightMargin", 0);
+
+	xAxis.set("link", function() {
+		return yAxis.get("position", 0);
+	});
+
+	yAxis.set("link", function() {
+		return yAxis.get("bbox").width;
+	});
+
+	yAxis.set("bottomMargin", function() {
+		return xAxis.get("bbox").height;
+	});
+
+	yAxis.set("topMargin", 0);
+
+	vis.set("margin", 0, 0, 0, 0);;
+	vis.appendTo('#vis');
+
+	/*window.setTimeout(function() {
+		vis.set("margin", 0, 0, 0, 0);;
+		yAxis.set("scale", [0, 1500000]);
+		xAxis.set("link", function() {
+			return yAxis.get("position", 10);
+		});
+		vis.redraw();
+	}, 1000);*/
+	
+	bar.set("end", function(d) {
+		var a = 0;
+		if(typeof(xAxis.get("link")) == 'number') {
+			a = xAxis.get("link");
+		}
+		var b = yAxis.get("position", d['y']);
+
+		return a-b;
+	});
+
+	bar.set("width", function(d, i) {
+		return xAxis.get("tickWidth")-10;
+	});
+
+	bar.set("left", function(d, i) {
+		return xAxis.get("position", d['x'])+xAxis.get("bbox").left+5;
+	});
+	
+	bar.set("start", function(d) {
+		if(xAxis.get("orientation") == 'top') {
+			if(typeof(xAxis.get("link")) == 'number') {
+				return xAxis.get("link");
+			} else {
+				return 0;
+			}
+		} else if(xAxis.get("orientation") == 'bottom') {
+			return xAxis.get("bbox").top;
+		}
+	});
+
+	vis.draw();
+	
+	bar.set("data", [
+		{'x': '0-4', 'y': 19, 'color': '#888888'},
+		{'x': '5-9', 'y': 26.5, 'color': '#888888'},
+		{'x': '10-14', 'y': 29, 'color': '#888888'},
+		{'x': '15-19', 'y': 25.5, 'color': '#888888'},
+		{'x': '20-24', 'y': 18, 'color': '#888888'},
+		{'x': '25-29', 'y': 14, 'color': '#888888'},
+		{'x': '30-34', 'y': 13.5, 'color': '#888888'},
+		{'x': '35-39', 'y': 16, 'color': '#888888'},
+		{'x': '40-44', 'y': 19, 'color': '#888888'},
+		{'x': '45-49', 'y': 20, 'color': '#888888'},
+		{'x': '50-54', 'y': 20.5, 'color': '#888888'},
+		{'x': '55-59', 'y': 21, 'color': '#888888'},
+		{'x': '60-64', 'y': 22, 'color': '#888888'},
+		{'x': '65+', 'y': 28, 'color': '#888888'},
+	]);
+	vis.redraw();
+}
+</script>
+</head>
+<body>
+<div id='vis'></div>
+</body>
+</html>

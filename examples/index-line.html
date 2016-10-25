@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="index.css" />
+<script src="../js/d3.min.js"></script>
+<script src="../js/function.js"></script>
+<script src="../js/function/extensions.js"></script>
+<script src="../js/x3.js"></script>
+<script src="../js/x3/axis.js"></script>
+<script src="../js/x3/line.js"></script>
+<script type="text/javascript">
+var vis = new x3();
+var line = new x3.line();
+
+var xAxis = new x3.axis(vis, 'linear', 'bottom');
+var yAxis = new x3.axis(vis, 'linear', 'left');
+
+window.onload=function() {
+	xAxis.set("ticks", 1);
+	yAxis.set("ticks", 5);
+
+	xAxis.set("orientation", 'bottom');
+	xAxis.set("type", 'linear');
+	yAxis.set("orientation", 'left');
+	yAxis.set("type", 'linear');
+
+	vis.on('create', function() {
+		xAxis.set("parent", this);
+		yAxis.set("parent", this);
+		line.set("parent", this);
+		yAxis.create();
+		xAxis.create();
+		line.create();
+	});
+
+	vis.on("draw", function() {
+		yAxis.draw();
+		xAxis.draw();
+		yAxis.draw();
+		xAxis.draw();
+	}, 0);
+
+	vis.on("redraw", function() {
+		yAxis.redraw();
+		xAxis.redraw();
+		yAxis.redraw();
+		xAxis.redraw();
+	}, 0);
+
+	vis.on("draw", function() {
+		line.draw();
+	}, 1);
+
+	vis.on("redraw", function() {
+		line.redraw();
+	}, 1);
+	
+	vis.set("margin", 0, 0, 0, 0);
+	vis.appendTo('#vis');
+
+	xAxis.set("tickFormat", function(d, i) {
+		return d.toString().replace('20', '\'');
+	});
+
+	xAxis.set("scale", [2005, 2013]);
+	yAxis.set("scale", [0, 35]);
+
+	xAxis.set("link", function() {
+		return yAxis.get("position", 0);
+	});
+	yAxis.set("link", function() {
+		return xAxis.get("position", 2005)+xAxis.get("bbox").left;
+	});
+	yAxis.set("bottomMargin", function() {
+		return xAxis.get("bbox").height;
+	});
+	xAxis.set("leftMargin", function() {
+		return yAxis.get("bbox").width;
+	});
+	
+	line.set("position-x", function(d, i) {
+		var x = (xAxis.get("position", d['x'])+xAxis.get("bbox").left)
+		if(xAxis.get("type") == 'ordinal') {
+			x += xAxis.get("tickWidth")/2;
+		}
+		return x;
+	});
+	
+	line.set("position-y", function(d, i) {
+		return yAxis.get("position", d['y']);
+	});
+	
+	line.set("order", function(a, b) {
+		return a['x'] - b['x'];
+	});
+
+	vis.draw();
+
+	line.set("data", [{
+		'id': 0,
+		'color': '#F6B400',
+		'width': 2,
+		'points': [
+			{'x': 2005, 'y': 28},
+			{'x': 2006, 'y': 29},
+			{'x': 2007, 'y': 26},
+			{'x': 2008, 'y': 27},
+			{'x': 2009, 'y': 27.5},
+			{'x': 2010, 'y': 27.6},
+			{'x': 2011, 'y': 27.7},
+			{'x': 2012, 'y': 27.8},
+			{'x': 2013, 'y': 28}
+		]
+	}, {
+		'id': 1,
+		'color': '#FF0000',
+		'width': 2,
+		'points': [
+			{'x': 2005, 'y': 28},
+			{'x': 2006, 'y': 27},
+			{'x': 2007, 'y': 26},
+			{'x': 2008, 'y': 25},
+			{'x': 2009, 'y': 25.5},
+			{'x': 2010, 'y': 25.6},
+			{'x': 2011, 'y': 25.6},
+			{'x': 2012, 'y': 25},
+			{'x': 2013, 'y': 24.5}
+		]
+	}, {
+		'id': 2,
+		'color': '#B4E600',
+		'width': 2,
+		'points': [
+			{'x': 2005, 'y': 23},
+			{'x': 2006, 'y': 23},
+			{'x': 2007, 'y': 22},
+			{'x': 2008, 'y': 20},
+			{'x': 2009, 'y': 21},
+			{'x': 2010, 'y': 22},
+			{'x': 2011, 'y': 22.5},
+			{'x': 2012, 'y': 23},
+			{'x': 2013, 'y': 23.5}
+		]
+	}, {
+		'id': 3,
+		'color': '#00a0e6',
+		'width': 2,
+		'points': [
+			{'x': 2005, 'y': 17},
+			{'x': 2006, 'y': 16.5},
+			{'x': 2007, 'y': 16},
+			{'x': 2008, 'y': 14},
+			{'x': 2009, 'y': 14},
+			{'x': 2010, 'y': 14.5},
+			{'x': 2011, 'y': 14.5},
+			{'x': 2012, 'y': 14.5},
+			{'x': 2013, 'y': 14.5}
+		]
+	}, {
+		'id': 4,
+		'color': '#787878',
+		'width': 2,
+		'points': [
+			{'x': 2005, 'y': 12},
+			{'x': 2006, 'y': 12},
+			{'x': 2007, 'y': 11.5},
+			{'x': 2008, 'y': 11},
+			{'x': 2009, 'y': 10.5},
+			{'x': 2010, 'y': 12},
+			{'x': 2011, 'y': 12.5},
+			{'x': 2012, 'y': 13},
+			{'x': 2013, 'y': 14}
+		]
+	}]);
+
+	vis.redraw();
+	
+}
+</script>
+</head>
+<body>
+<div id='vis'></div>
+</body>
+</html>

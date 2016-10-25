@@ -1,0 +1,10 @@
+js/function.js
+js/function/extensions.js
+js/x3.js
+js/x3/axis.js
+js/x3/grid.js
+js/x3/bar.js
+js/x3/column.js
+js/x3/line.js
+js/x3/pie.js
+js/x3/pieText.js

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="index.css" />
+<script src="../js/d3.min.js"></script>
+<script src="../js/function.js"></script>
+<script src="../js/function/extensions.js"></script>
+<script src="../js/x3.js"></script>
+<script src="../js/x3/axis.js"></script>
+<script src="../js/x3/column.js"></script>
+<script type="text/javascript">
+var vis = new x3();
+var xAxis = new x3.axis();
+var yAxis = new x3.axis();
+
+window.onload=function() {
+	var column = new x3.column();
+
+	xAxis.set("orientation", 'bottom');
+	xAxis.set("type", 'linear');
+	yAxis.set("orientation", 'left');
+	yAxis.set("type", 'ordinal');
+
+	vis.on('create', function() {
+		xAxis.set("parent", this);
+		yAxis.set("parent", this);
+		column.set("parent", this);
+		yAxis.create();
+		xAxis.create();
+		column.create();
+	});
+	
+	vis.on("draw", function() {
+		yAxis.draw();
+		xAxis.draw();
+		yAxis.draw();
+		xAxis.draw();
+	}, 0);
+
+	vis.on("draw", function() {
+		column.redraw();
+	}, 1);
+
+	vis.on("redraw", function() {
+		yAxis.redraw();
+		xAxis.redraw();
+		yAxis.redraw();
+		xAxis.redraw();
+	}, 0);
+
+	vis.on("redraw", function() {
+		column.redraw();
+	}, 1);
+
+	xAxis.set("scale", [0, 100]);
+	yAxis.set("scale", ['0 -79% WSM','80-99% WSM','100-109% WSM','110-119% WSM']);
+
+	xAxis.set("leftMargin", function() {
+		return yAxis.get("bbox").width;
+	});
+
+	xAxis.set("rightMargin", 0);
+
+	xAxis.set("link", function() {
+		return yAxis.get("bbox").height+yAxis.get("bbox").top;
+	});
+
+	yAxis.set("link", function() {
+		return xAxis.get("position", 0)+xAxis.get("bbox").left;
+	});
+
+	yAxis.set("bottomMargin", function() {
+		return xAxis.get("bbox").height;
+	});
+
+	yAxis.set("topMargin", 1);
+
+	vis.set("margin", 0, 0, 0, 0);
+	vis.appendTo('#vis');
+
+	column.set("end", function(d) {
+		var b = xAxis.get("position", d['x'][1]-d['x'][0]);
+		return b;
+	});
+
+	column.set("height", function(d, i) {
+		return yAxis.get("tickWidth")-10;
+	});
+
+	column.set("top", function(d, i) {
+		return yAxis.get("position", d['y'])+yAxis.get("bbox").top+5;
+	});
+	
+	column.set("start", function(d, i, f) {
+		var start = xAxis.get("position", d['x'][0])+xAxis.get("bbox").left;
+		if(f == true) {
+			start += xAxis.get("position", (d['x'][1]-d['x'][0])/2);
+		}
+		return start;
+		
+	});
+
+	column.set("data", [
+		{'y': '0 -79% WSM', 'x': [ 0, 71 ], 'color': '#FF0000'},
+		{'y': '0 -79% WSM', 'x': [ 71, 87 ], 'color': '#888888'},
+		{'y': '0 -79% WSM', 'x': [ 87, 98 ], 'color': '#71BDEE'},
+		{'y': '0 -79% WSM', 'x': [ 98, 100 ], 'color': '#CCCCCC'},
+		{'y': '80-99% WSM', 'x': [ 0, 27 ], 'color': '#FF0000'},
+		{'y': '80-99% WSM', 'x': [ 27, 72 ], 'color': '#888888'},
+		{'y': '80-99% WSM', 'x': [ 72, 100 ], 'color': '#71BDEE'},
+		{'y': '100-109% WSM', 'x': [ 0, 12 ], 'color': '#FF0000'},
+		{'y': '100-109% WSM', 'x': [ 12, 73 ], 'color': '#888888'},
+		{'y': '100-109% WSM', 'x': [ 73, 99 ], 'color': '#71BDEE'},
+		{'y': '100-109% WSM', 'x': [ 99, 100 ], 'color': '#CCCCCC'},
+		{'y': '110-119% WSM', 'x': [ 0, 34 ], 'color': '#FF0000'},
+		{'y': '110-119% WSM', 'x': [ 34, 77 ], 'color': '#888888'},
+		{'y': '110-119% WSM', 'x': [ 77, 100 ], 'color': '#71BDEE'}
+	]);
+
+	window.setTimeout(function() {
+		column.set("data", [
+			{'y': '0 -79% WSM', 'x': [ 0, 25 ]},
+			{'y': '0 -79% WSM', 'x': [ 25, 34 ]},
+			{'y': '0 -79% WSM', 'x': [ 34, 76 ]},
+			{'y': '0 -79% WSM', 'x': [ 76, 100 ]},
+			{'y': '80-99% WSM', 'x': [ 0, 54 ]},
+			{'y': '80-99% WSM', 'x': [ 54, 78 ]},
+			{'y': '80-99% WSM', 'x': [ 78, 100 ]},
+			{'y': '100-109% WSM', 'x': [ 0, 5 ]},
+			{'y': '100-109% WSM', 'x': [ 5, 67 ]},
+			{'y': '100-109% WSM', 'x': [ 67, 76 ]},
+			{'y': '100-109% WSM', 'x': [ 76, 100 ]},
+			{'y': '110-119% WSM', 'x': [ 0, 11 ]},
+			{'y': '110-119% WSM', 'x': [ 11, 56 ]},
+			{'y': '110-119% WSM', 'x': [ 56, 100 ]}
+		]);
+
+		vis.redraw();
+	}, 1000);
+	vis.draw();
+}
+</script>
+</head>
+<body>
+<div id='vis'></div>
+</body>
+</html>

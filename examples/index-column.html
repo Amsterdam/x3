@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="index.css" />
+<script src="../js/d3.min.js"></script>
+<script src="../js/function.js"></script>
+<script src="../js/function/extensions.js"></script>
+<script src="../js/x3.js"></script>
+<script src="../js/x3/axis.js"></script>
+<script src="../js/x3/column.js"></script>
+<script type="text/javascript">
+var vis = new x3();
+var xAxis1 = new x3.axis();
+var yAxis1 = new x3.axis();
+var xAxis2 = new x3.axis();
+var yAxis2 = new x3.axis();
+
+var column1 = new x3.column();
+var column2 = new x3.column();
+
+function showAbs() {
+	column1.set("data", [
+		{'y': 'Westpoort', 'x': 10},
+		{'y': 'Zuidoost', 'x': 10},
+		{'y': 'West', 'x': 10},
+		{'y': 'Noord', 'x': 10},
+		{'y': 'Nieuw-West', 'x': 10},
+		{'y': 'Oost', 'x': 10},
+		{'y': 'Centrum', 'x': 10},
+		{'y': 'Zuid', 'x': 10}
+	]);
+	column2.set("data", [
+		{'y': 'Westpoort', 'x': 82/1000},
+		{'y': 'Zuidoost', 'x': 11101/1000},
+		{'y': 'West', 'x': 18072/1000},
+		{'y': 'Noord', 'x': 10352/1000},
+		{'y': 'Nieuw-West', 'x': 14236/1000},
+		{'y': 'Oost', 'x': 12872/1000},
+		{'y': 'Centrum', 'x': 9889/1000},
+		{'y': 'Zuid', 'x': 13738/1000}
+	]);
+	
+	yAxis1.set("sort", function(d) {
+		d(column2.get("data").sort(function(a, b) {
+			return b['x'] - a['x'];
+		})
+		.map(function(d) { return d['y'] }));
+	});
+
+	yAxis2.set("sort", function(d) {
+		d(column2.get("data").sort(function(a, b) {
+			return b['x'] - a['x'];
+		})
+		.map(function(d) { return d['y'] }));
+	});
+
+	vis.draw();
+}
+
+function showPerc() {
+
+	column1.set("data", [
+		{'y': 'Westpoort', 'x': 51},
+		{'y': 'Zuidoost', 'x': 30},
+		{'y': 'West', 'x': 26},
+		{'y': 'Noord', 'x': 26},
+		{'y': 'Nieuw-West', 'x': 24},
+		{'y': 'Oost', 'x': 23},
+		{'y': 'Centrum', 'x': 22},
+		{'y': 'Zuid', 'x': 19}
+	]);
+	column2.set("data", [
+		{'y': 'Westpoort', 'x': 4000/1000},
+		{'y': 'Zuidoost', 'x': 4000/1000},
+		{'y': 'West', 'x': 4000/1000},
+		{'y': 'Noord', 'x': 4000/1000},
+		{'y': 'Nieuw-West', 'x': 4000/1000},
+		{'y': 'Oost', 'x': 4000/1000},
+		{'y': 'Centrum', 'x': 4000/1000},
+		{'y': 'Zuid', 'x': 4000/1000}
+	]);
+
+	yAxis1.set("sort", function(d) {
+		d(column1.get("data").sort(function(a, b) {
+			return b['x'] - a['x'];
+		})
+		.map(function(d) { return d['y'] }));
+	});
+
+	yAxis2.set("sort", function(d) {
+		d(column1.get("data").sort(function(a, b) {
+			return b['x'] - a['x'];
+		})
+		.map(function(d) { return d['y'] }));
+	});
+
+	vis.redraw();
+	window.setTimeout(showAbs, 2000);
+}
+
+window.onload=function() {
+	xAxis1.set("orientation", 'bottom');
+	xAxis1.set("type", 'linear');
+	yAxis1.set("orientation", 'left');
+	yAxis1.set("type", 'ordinal');
+	
+	xAxis2.set("orientation", 'top');
+	xAxis2.set("type", 'linear');
+	yAxis2.set("orientation", 'right');
+	yAxis2.set("type", 'ordinal');
+
+	vis.on('create', function() {
+		xAxis1.set("parent", this);
+		yAxis1.set("parent", this);
+		xAxis2.set("parent", this);
+		yAxis2.set("parent", this);
+		column1.set("parent", this);
+		column2.set("parent", this);
+		yAxis1.create();
+		xAxis1.create();
+		yAxis2.create();
+		xAxis2.create();
+		column1.create();
+		column2.create();
+	});
+	
+	vis.on("draw", function() {
+		yAxis1.draw();
+		xAxis1.draw();
+		yAxis1.draw();
+		xAxis1.draw();
+		yAxis2.draw();
+		xAxis2.draw();
+		yAxis2.draw();
+		xAxis2.draw();
+	}, 0);
+
+	vis.on("draw", function() {
+		column1.draw();
+		column2.draw();
+	}, 1);
+
+	vis.on("redraw", function() {
+		yAxis1.redraw();
+		xAxis1.redraw();
+		yAxis1.redraw();
+		xAxis1.redraw();
+		yAxis2.redraw();
+		xAxis2.redraw();
+		yAxis2.redraw();
+		xAxis2.redraw();
+	}, 0);
+
+	vis.on("redraw", function() {
+		column1.redraw();
+		column2.redraw();
+	}, 1);
+	
+	xAxis1.set("scale", [0, 75]);
+	yAxis1.set("scale", ['Westpoort', 'Zuidoost', 'West', 'Noord', 'Nieuw-West', 'Oost', 'Centrum', 'Zuid']);
+
+	xAxis1.set("leftMargin", function() {
+		return yAxis1.get("bbox").width;
+	});
+
+	xAxis1.set("rightMargin", 0);
+
+	xAxis1.set("link", function() {
+		return yAxis1.get("bbox").height+yAxis1.get("bbox").top;
+	});
+
+	yAxis1.set("link", function() {
+		return xAxis1.get("position", 0)+xAxis1.get("bbox").left;
+	});
+
+	yAxis1.set("bottomMargin", function() {
+		return xAxis1.get("bbox").height;
+	});
+
+	yAxis1.set("topMargin", 1);
+
+	xAxis2.set("scale", [25, 0]);
+	yAxis2.set("scale", ['Westpoort', 'Zuidoost', 'West', 'Noord', 'Nieuw-West', 'Oost', 'Centrum', 'Zuid']);
+
+	xAxis2.set("leftMargin", function() {
+		return yAxis1.get("bbox").width;
+	});
+
+	xAxis2.set("rightMargin", 0);
+
+	xAxis2.set("link", function() {
+		return yAxis2.get("bbox").top;
+	});
+
+	yAxis2.set("link", function() {
+		return xAxis2.get("bbox").width+xAxis2.get("bbox").left;
+	});
+
+	yAxis2.set("bottomMargin", function() {
+		return xAxis2.get("bbox").height;
+	});
+
+	yAxis2.set("topMargin", function() {
+		return 1;
+	});
+
+	vis.set("margin", 0, 0, 0, 0);
+	vis.appendTo('#vis');
+
+	column1.set("end", function(d) {
+		var a = 0;
+		if(typeof(yAxis1.get("link")) == 'number') {
+			c = yAxis1.get("link");
+		}
+		var a = c-xAxis1.get("bbox").left;
+		var b = xAxis1.get("position", d['x']);
+
+		return b-a;
+	});
+
+	column1.set("height", function(d, i) {
+		return yAxis1.get("tickWidth")-10;
+	});
+
+	column1.set("top", function(d, i) {
+		return yAxis1.get("position", d['y'])+5;
+	});
+
+	column1.set("start", function(d) {
+		if(yAxis1.get("orientation") == 'right') {
+			if(typeof(yAxis1.get("link")) == 'number') {
+				return yAxis1.get("link");
+			} else {
+				return 0;
+			}
+		} else if(yAxis1.get("orientation") == 'left') {
+			return yAxis1.get("bbox").left;
+		}
+	});
+
+	column1.set("data", [
+		{'y': 'Westpoort', 'x': 10, 'color': '#FF0000'},
+		{'y': 'Zuidoost', 'x': 10, 'color': '#FF0000'},
+		{'y': 'West', 'x': 10, 'color': '#FF0000'},
+		{'y': 'Noord', 'x': 10, 'color': '#FF0000'},
+		{'y': 'Nieuw-West', 'x': 10, 'color': '#FF0000'},
+		{'y': 'Oost', 'x': 10, 'color': '#FF0000'},
+		{'y': 'Centrum', 'x': 10, 'color': '#FF0000'},
+		{'y': 'Zuid', 'x': 10, 'color': '#FF0000'}
+	]);
+
+	column2.set("end", function(d) {
+		var a = 0;
+		if(typeof(yAxis2.get("link")) == 'number') {
+			c = yAxis2.get("link");
+		}
+		var a = c-xAxis2.get("bbox").left;
+		var b = xAxis2.get("position", d['x']);
+
+		return b-a;
+	});
+
+	column2.set("height", function(d, i) {
+		return yAxis2.get("tickWidth")-10;
+	});
+
+	column2.set("top", function(d, i) {
+		return yAxis2.get("position", d['y'])+5;
+	});
+
+	column2.set("start", function(d) {
+		if(yAxis2.get("orientation") == 'right') {
+			if(typeof(yAxis2.get("link")) == 'number') {
+				return yAxis2.get("link");
+			} else {
+				return 0;
+			}
+		} else if(yAxis2.get("orientation") == 'left') {
+			return yAxis2.get("bbox").left;
+		}
+	});
+
+	column2.set("data", [
+		{'y': 'Westpoort', 'x': 4000/1000, 'color': '#888888'},
+		{'y': 'Zuidoost', 'x': 4000/1000, 'color': '#888888'},
+		{'y': 'West', 'x': 4000/1000, 'color': '#888888'},
+		{'y': 'Noord', 'x': 4000/1000, 'color': '#888888'},
+		{'y': 'Nieuw-West', 'x': 4000/1000, 'color': '#888888'},
+		{'y': 'Oost', 'x': 4000/1000, 'color': '#888888'},
+		{'y': 'Centrum', 'x': 4000/1000, 'color': '#888888'},
+		{'y': 'Zuid', 'x': 4000/1000, 'color': '#888888'}
+	]);
+
+	window.setTimeout(function() {
+		showPerc();
+	}, 2000);
+	
+	vis.draw();
+}
+</script>
+</head>
+<body>
+<div id='vis'></div>
+</body>
+</html>

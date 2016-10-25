@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="index.css" />
+<script src="../js/d3.min.js"></script>
+<script src="../js/function.js"></script>
+<script src="../js/function/extensions.js"></script>
+<script src="../js/x3.js"></script>
+<script src="../js/x3/pie.js"></script>
+<script src="../js/x3/pieText.js"></script>
+<script type="text/javascript">
+var vis = new x3();
+var timer = null;
+window.onresize=function() {
+	window.clearTimeout(timer);
+	timer = window.setTimeout(function() {
+		vis.redraw();
+	}, 100);
+}
+
+window.onload=function() {
+	var pie = new x3.pie();
+	var pieText = new x3.pieText();
+
+	vis.on('create', function() {
+		pie.set("parent", this);
+		pieText.set("parent", pie);
+		pie.create();
+	});
+
+	vis.on("draw", function() {
+		pie.draw();
+		pieText.draw();
+	}, 0);
+
+	vis.on("redraw", function() {
+		pie.redraw();
+		pieText.redraw();
+	}, 0);
+	
+	vis.set("margin", 20, 0, 20, 0);
+	vis.appendTo('#vis');
+
+	pie.set("data", [{ 'value': 0, 'color': '#FF0000' }, { 'value': 100, 'color': '#888888', 'label': false }]);
+
+	vis.draw();
+
+	window.setTimeout(function() {
+		pie.set("data", [{ 'value': 25 }, { 'value': 75, 'label': false }]);
+		vis.redraw();
+	}, 1000);
+}
+</script>
+</head>
+<body>
+<div id='vis'></div>
+</body>
+</html>
